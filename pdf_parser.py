@@ -34,7 +34,9 @@ class FileRenamer():
         return None
 
     def validate_filename(self, new_fname, filepath):
-        webbrowser.open(filepath)
+        chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
+        webbrowser.get(chrome_path).open(filepath)
+        # webbrowser.open(filepath)
         print("\n %s \n" % new_fname)
         accept_fname = self.get_bool_user_in()
         # TODO: put the duplicate filename fxn here
