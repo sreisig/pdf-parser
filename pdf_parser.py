@@ -71,29 +71,6 @@ class FileRenamer():
         new_fname = "{}{}{}".format(base_filename[:-4], count, base_filename[-4:])
         return new_fname
 
-    def process_dir(self):
-        # for each file that needs to be renamed
-        for filename in os.listdir(self.input_dir):
-            filepath = os.path.join(self.input_dir, filename)
-
-            # parse .pdffile
-            fileObj = open((filepath), 'rb')
-            pdfReader = PyPDF2.PdfFileReader(fileObj)
-            pageObj = pdfReader.getPage(0)
-
-            # generate possible filename
-            base_possible_fname = self.generate_filename(pageObj)
-
-            
-            fileObj.close()
-            
-            if base_possible_fname is not None:
-                new_possible_fname = self.handle_duplicate_fname(base_possible_fname)
-                self.validate_filename(new_possible_fname, filepath)
-            else:
-                self.reject_filename(filepath)
-
-        return
 
     def handle_duplicate_fname(self, base_possible_fname):
         '''
@@ -120,10 +97,32 @@ class FileRenamer():
             if not os.path.isdir(d):
                 exit("Directory '{}' does not exist. Stopping execution.".format(d))
 
-# TODO: create documentation
+    def process_dir(self):
+        # for each file that needs to be renamed
+        for filename in os.listdir(self.input_dir):
+            if filename.endswith('.pdf'):
+                filepath = os.path.join(self.input_dir, filename)
+
+                # parse .pdffile
+                fileObj = open((filepath), 'rb')
+                pdfReader = PyPDF2.PdfFileReader(fileObj)
+                pageObj = pdfReader.getPage(0)
+
+                # generate possible filename
+                base_possible_fname = self.generate_filename(pageObj)
+
+                
+                fileObj.close()
+                
+                if base_possible_fname is not None:
+                    new_possible_fname = self.handle_duplicate_fname(base_possible_fname)
+                    self.validate_filename(new_possible_fname, filepath)
+                else:
+                    self.reject_filename(filepath)
+        return
 
 if __name__ == "__main__":
     fr = FileRenamer('./input_data/', './renamed_pdfs/', './rejected_pdfs/')
     fr.check_dirs_exist()
     fr.process_dir()
-    print("No more files in '{}'. Execution complete.".format(fr.input_dir))
+    print("No more .pdf files in '{}'. Execution complete.".format(fr.input_dir))
