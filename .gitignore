@@ -1,7 +1,7 @@
 .vscode
-./input_data/*.pdf
-./rejected_pdfs/*.pdf
-./renamed_pdfs/*.pdf
+input_data/*.pdf
+rejected_pdfs/*.pdf
+renamed_pdfs/*.pdf
 
 ######################
 ## From Boilerplate ##
